@@ -1,0 +1,46 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background: Smooth Rounded Square with Gradient -->
+    <rect width="512" height="512" rx="120" fill="url(#paint0_linear)"/>
+    
+    <!-- Ledger/Document Shape -->
+    <path d="M140 100H320L412 192V412C412 434.091 394.091 452 372 452H140C117.909 452 100 434.091 100 412V140C100 117.909 117.909 100 140 100Z" fill="#1C1C1E" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+    
+    <!-- Folded Corner -->
+    <path d="M320 100V192H412" fill="url(#paint1_linear)"/>
+    
+    <!-- AI Circuit Pattern inside the Ledger -->
+    <!-- Central Node -->
+    <circle cx="256" cy="276" r="24" fill="#0A84FF"/>
+    <circle cx="256" cy="276" r="12" fill="white"/>
+    
+    <!-- Circuit Lines -->
+    <path d="M256 252V180" stroke="#0A84FF" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="256" cy="160" r="12" fill="#30D158"/>
+    
+    <path d="M256 300V372" stroke="#0A84FF" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="256" cy="392" r="12" fill="#30D158"/>
+    
+    <path d="M232 276H160" stroke="#0A84FF" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="140" cy="276" r="12" fill="#30D158"/>
+    
+    <path d="M280 276H352" stroke="#0A84FF" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="372" cy="276" r="12" fill="#30D158"/>
+    
+    <!-- Data Bars (Ledger aspect) -->
+    <rect x="160" y="320" width="40" height="8" rx="4" fill="#8E8E93"/>
+    <rect x="312" y="320" width="40" height="8" rx="4" fill="#8E8E93"/>
+    <rect x="160" y="220" width="40" height="8" rx="4" fill="#8E8E93"/>
+    <rect x="312" y="220" width="40" height="8" rx="4" fill="#8E8E93"/>
+
+    <!-- Defs for Gradients -->
+    <defs>
+        <linearGradient id="paint0_linear" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#0A84FF"/>
+            <stop offset="1" stop-color="#0056B3"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear" x1="320" y1="100" x2="412" y2="192" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#30D158"/>
+            <stop offset="1" stop-color="#248A3D"/>
+        </linearGradient>
+    </defs>
+</svg>

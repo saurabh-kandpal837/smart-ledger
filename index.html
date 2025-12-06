@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rodger - Smart Voice Ledger</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo-container">
+                <img src="logo.svg" alt="Rodger Logo" class="app-logo">
+                <h1 class="logo-text">Rodger</h1>
+            </div>
+            <div class="status-indicator" id="connection-status">Online</div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Summary Cards (Global or Dashboard specific?) -->
+            <!-- We'll keep them in Dashboard for now as per original app, but maybe Shop needs its own -->
+
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-target="dashboard">Customer Ledger</button>
+
+            </div>
+
+            <!-- VIEW: Dashboard (Customer Ledger) -->
+            <div id="dashboard-view" class="view active">
+                <div class="summary-cards">
+                    <div class="card">
+                        <h3>Total Volume</h3>
+                        <div class="amount" id="total-amount">₹0</div>
+                    </div>
+                    <div class="card card-green">
+                        <h3>Received</h3>
+                        <div class="amount" id="total-debit">₹0</div>
+                    </div>
+                    <div class="card card-red">
+                        <h3>Due</h3>
+                        <div class="amount" id="total-credit">₹0</div>
+                    </div>
+                    <div class="card" style="display:none;">
+                        <h3>Expense</h3>
+                        <div class="amount" id="total-expense">₹0</div>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <h2 id="current-date-header">Today's Entries</h2>
+                    <div class="filters-container"
+                        style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="search-input" placeholder="Search Customer..."
+                            style="padding: 8px; border-radius: 8px; border: 1px solid #333; background: #1e1e1e; color: #fff;">
+                        <div class="date-range" style="display: flex; gap: 5px; align-items: center;">
+                            <input type="date" id="date-from"
+                                style="padding: 8px; border-radius: 8px; border: 1px solid #333; background: #1e1e1e; color: #fff;">
+                            <span style="color: #888;">to</span>
+                            <input type="date" id="date-to"
+                                style="padding: 8px; border-radius: 8px; border: 1px solid #333; background: #1e1e1e; color: #fff;">
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="text-btn" id="old-records-btn">History</button>
+                        <button class="text-btn" id="export-btn">Export</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="daily-sheet-table">
+                        <thead>
+                            <tr>
+                                <th>Sr.</th>
+                                <th>Customer Name</th>
+                                <th>Item</th>
+                                <th>Amount</th>
+                                <th>Time</th>
+                                <th>Due</th>
+                                <th>Paid</th>
+                                <th>Exp</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="daily-sheet-body">
+                            <!-- Rows will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- VIEW: Old Records -->
+            <div id="old-records-view" class="view hidden">
+                <div class="view-header">
+                    <button class="back-btn" onclick="showView('dashboard')">← Back</button>
+                    <h2>History</h2>
+                </div>
+
+                <div class="date-picker-container">
+                    <input type="date" id="history-date-picker">
+                    <button id="load-history-btn">Load</button>
+                </div>
+
+                <div class="table-container">
+                    <table id="history-table">
+                        <thead>
+                            <tr>
+                                <th>Sr.</th>
+                                <th>Customer Name</th>
+                                <th>Item</th>
+                                <th>Amount</th>
+                                <th>Time</th>
+                                <th>Due</th>
+                                <th>Paid</th>
+                                <th>Exp</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Input Bar -->
+        <div class="input-bar-container">
+            <button class="icon-btn voice-trigger" id="voice-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+            </button>
+            <div class="text-input-wrapper">
+                <input type="text" id="user-input" placeholder="Type or say 'Rakesh 500 udhar'...">
+            </div>
+            <button class="icon-btn send-trigger" id="send-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Voice Overlay -->
+        <div id="voice-overlay" class="voice-overlay hidden">
+            <div class="listening-animation">
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
+            <div id="voice-status-text">Listening...</div>
+        </div>
+
+    </div>
+
+    <script src="logic.js"></script>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch((err) => console.error('Service Worker Failed', err));
+        }
+    </script>
+</body>
+
+</html>
