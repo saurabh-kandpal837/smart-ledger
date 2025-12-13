@@ -510,6 +510,11 @@ input[type="date"] {
 td[contenteditable="true"] {
     cursor: text;
     transition: background 0.2s;
+    white-space: pre-wrap;
+    /* Preserve new lines and wrap text */
+    word-wrap: break-word;
+    min-width: 150px;
+    /* Ensure enough width for typing */
 }
 
 td[contenteditable="true"]:focus {
@@ -529,4 +534,159 @@ td[contenteditable="true"]:focus {
 
 .delete-btn:hover {
     background: rgba(255, 69, 58, 0.1);
+}
+
+/* Suggestions Dropdown */
+.suggestions-dropdown {
+    position: absolute;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    min-width: 150px;
+    display: none;
+    /* Hidden by default */
+}
+
+.suggestion-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    color: #e0e0e0;
+    font-size: 14px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover,
+.suggestion-item.active {
+    background-color: #333;
+
+    color: #fff;
+}
+
+/* Collapsible Menu Styling */
+.collapsible-menu-container {
+    background: var(--surface-color);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.collapsible-toggle {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+}
+
+.collapsible-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.arrow-icon {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.collapsible-toggle.active .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.collapsible-content.expanded {
+    max-height: 500px;
+    /* Adjust based on expected list size, or use max-height trick */
+    overflow-y: auto;
+}
+
+.items-table-container {
+    border: none;
+    /* Reset border inside collapsible */
+    background: transparent;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.items-table-container table {
+    border: none;
+}
+
+.items-table-container th {
+    top: 0;
+    background: #2c2c2e;
+    /* Slightly lighter for inner header */
+}
+
+/* Scrollbar for items list */
+.items-table-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.items-table-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 80px;
+    /* Above input bar */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(48, 209, 88, 0.9);
+    /* Success Green */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    animation: fadeInOut 2s ease forwards;
+    pointer-events: none;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 10px);
+    }
+
+    10% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    80% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
 }

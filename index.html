@@ -54,6 +54,41 @@
                     </div>
                 </div>
 
+                <!-- NEW: Sorted Items Collapsible Menu -->
+                <div class="collapsible-menu-container">
+                    <button class="collapsible-toggle" id="items-menu-toggle">
+                        <span>📦 Sorted Items Master List</span>
+                        <span class="arrow-icon">▼</span>
+                    </button>
+
+                    <div class="collapsible-content" id="items-menu-content">
+                        <!-- Manual Add Item Section -->
+                        <div class="manual-add-container"
+                            style="padding: 10px; border-bottom: 1px solid var(--glass-border); display: flex; gap: 8px;">
+                            <input type="text" id="new-item-input" placeholder="Enter new item name..."
+                                style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #1e1e1e; color: #fff;">
+                            <button id="add-item-btn"
+                                style="background: var(--primary-color); color: white; border: none; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: 600;">Add</button>
+                        </div>
+                        <div class="table-container items-table-container">
+                            <table id="items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.</th>
+                                        <th>Item Name</th>
+                                        <th>Date Added</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="items-table-body">
+                                    <!-- Items will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="section-header">
                     <h2 id="current-date-header">Today's Entries</h2>
                     <div class="filters-container"
@@ -117,7 +152,7 @@
                                 <th>Customer Name</th>
                                 <th>Item</th>
                                 <th>Amount</th>
-                                <th>Time</th>
+                                <th>Date & Time</th>
                                 <th>Due</th>
                                 <th>Paid</th>
                                 <th>Exp</th>
@@ -165,7 +200,10 @@
             <div id="voice-status-text">Listening...</div>
         </div>
 
+
     </div>
+
+    <div id="toast-container"></div>
 
     <script src="logic.js"></script>
     <script src="app.js"></script>

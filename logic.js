@@ -259,4 +259,124 @@ class LedgerManager {
     }
 }
 
+class ItemsMasterList {
+    constructor() {
+        // Storage: [ { name: "Apple", date: "12-12-2025" }, ... ]
+        const rawData = JSON.parse(localStorage.getItem('rodger_items_master')) || [];
 
+        // MIGRATION: Convert old string arrays to object arrays
+        if (rawData.length > 0 && typeof rawData[0] === 'string') {
+            const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+            this.items = rawData.map(name => ({ name: name, date: today }));
+            this.save();
+        } else {
+            this.items = rawData;
+        }
+    }
+
+    save() {
+        localStorage.setItem('rodger_items_master', JSON.stringify(this.items));
+    }
+
+    populateFromLedger(ledger) {
+        // Only bootstrap if empty
+        if (this.items.length > 0) return;
+
+        const allSheets = ledger.sheets;
+        const tempMap = new Map(); // Name -> Date (first found)
+
+        // Iterate backward to find earliest date? Or just take current?
+        // Let's just iterate and grab unique names.
+        Object.keys(allSheets).sort().forEach(dateKey => {
+            allSheets[dateKey].forEach(entry => {
+                if (entry.item_name && entry.item_name !== '-' && !entry.item_name.startsWith('[Deleted]')) {
+                    const normalized = entry.item_name.trim();
+                    const titleCased = this.toTitleCase(normalized);
+                    if (!tempMap.has(titleCased)) {
+                        tempMap.set(titleCased, dateKey);
+                    }
+                }
+            });
+        });
+
+        // Convert map to array (Insertion Order preserved by Map keys iteration usually, but let's sort alphabetically for initial bootstrap ONLY)
+        // actually user wants insertion order mainly for NEW items. Bootstraping alphabetically is fine.
+        const sortedNames = Array.from(tempMap.keys()).sort();
+
+        sortedNames.forEach(name => {
+            this.items.push({ name: name, date: tempMap.get(name) });
+        });
+
+        this.save();
+    }
+
+    addItem(rawName) {
+        if (!rawName || rawName === '-') return false;
+        const normalized = rawName.trim();
+        const titleCased = this.toTitleCase(normalized);
+
+        // Check for duplicate (Case insensitive)
+        const exists = this.items.some(i => i.name.toLowerCase() === titleCased.toLowerCase());
+
+        if (!exists) {
+            const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+            // APPEND to end
+            this.items.push({ name: titleCased, date: today });
+            this.save();
+            return true; // Added
+        }
+        return false; // Exists
+    }
+
+    getItems() {
+        return this.items; // Returns objects {name, date}
+    }
+
+    search(query) {
+        if (!query) return [];
+        const lowerQ = query.toLowerCase();
+        // Return just names for suggestions, or full objects? 
+        // Suggestion UI expects strings.
+        return this.items
+            .filter(item => item.name.toLowerCase().includes(lowerQ))
+            .map(item => item.name);
+    }
+
+
+    toTitleCase(str) {
+        return str.replace(
+            /\w\S*/g,
+            text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+        );
+    }
+
+    deleteItem(itemName, ledgerManager) {
+        // Find index by name
+        const index = this.items.findIndex(i => i.name === itemName);
+        if (index === -1) return false;
+
+        // 1. Remove from Master List
+        this.items.splice(index, 1);
+        this.save();
+
+        // 2. Update all Past Ledger Entries
+        const allSheets = ledgerManager.sheets;
+        let changesMade = false;
+
+        Object.keys(allSheets).forEach(dateKey => {
+            const sheet = allSheets[dateKey];
+            sheet.forEach(entry => {
+                if (entry.item_name === itemName) {
+                    entry.item_name = `[Deleted] ${itemName}`;
+                    changesMade = true;
+                }
+            });
+        });
+
+        if (changesMade) {
+            ledgerManager.save();
+        }
+
+        return true;
+    }
+}
